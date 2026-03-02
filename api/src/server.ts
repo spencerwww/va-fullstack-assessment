@@ -2,9 +2,15 @@ import http from 'http';
 import express from 'express';
 import cors from 'cors';
 
+import swaggerUi from 'swagger-ui-express';
+import fs from 'fs';
+import yaml from 'js-yaml';
+
 const app = express();
+const openapiSpec = yaml.load(fs.readFileSync('./openapi.yaml', 'utf-8')) as object;
 app.use(cors({ origin: true, credentials: false }));
 app.use(express.json());
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpec));
 
 // Default to local emulator when EMULATOR_URL is not provided.
 const EMULATOR_URL = process.env.EMULATOR_URL || 'http://localhost:3001';
