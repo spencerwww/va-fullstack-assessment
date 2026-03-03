@@ -135,6 +135,42 @@ paths:
                 $ref: '#/components/schemas/Error'
               example:
                 error: 'Unexpected server error'
+  /telemetry:
+    get:
+      tags:
+        - Telemetry
+      operationId: getLatestTelemetry
+      summary: Retrieve latest telemetry data of all sensors
+      responses:
+        '200':
+          description: Successful retrieval of telemetry data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SensorData'
+              example:
+                - sensorId: 1000000070501
+                  value: 33.7018539186185
+                  timestamp: 1772577540.037
+                - sensorId: 2000000051201
+                  value: 190.96918605453672
+                  timestamp: 1772577540.036
+                - sensorId: 3000000060001
+                  value: 421.56080856948626
+                  timestamp: 1772577540.043
+                - sensorId: 3000000060101
+                  value: 17.8991355778208
+                  timestamp: 1772577540.246
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Unexpected server error'
 components:
   schemas:
     SensorMetadata:
@@ -157,6 +193,19 @@ components:
           type: string
       example:
         error: 'An error occurred'
+    SensorData:
+      type: object
+      properties:
+        sensorId:
+          type: number
+        value:
+          type: number
+        timestamp:
+          type: number
+      example:
+        sensorId: 1000000070501
+        value: 33.7018539186185
+        timestamp: 1772577540.037
 servers:
   - url: http://localhost:4000
     description: Local development server
