@@ -45,10 +45,10 @@ paths:
       tags:
         - Sensors
       operationId: getSensors
-      summary: Retrieve a list of available sensors
+      summary: Retrieve metadata of all sensors
       responses:
         '200':
-          description: A list of sensors
+          description: Successful retrieval of sensor metadata
           content:
             application/json:
               schema:
@@ -90,6 +90,52 @@ paths:
                     type: string
                 example:
                   error: 'Failed to retrieve sensors'
+  /sensors/{sensorId}:
+    get:
+      tags:
+        - Sensors
+      operationId: getSensor
+      summary: Retrieve metadata of a sensor
+      parameters:
+        - in: path
+          name: sensorId
+          required: true
+          schema:
+            type: number
+          description: Unique identifier of the sensor
+      responses:
+        '200':
+          description: Successful retrieval of sensor metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SensorMetadata'
+              example:
+                sensorId: 1000000070501
+                sensorName: 'BATTERY_TEMPERATURE'
+                unit: 'C'
+        '404':
+          description: Sensor not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                example:
+                  error: 'Sensor not found'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                example:
+                  error: 'Unexpected server error'
 components:
   schemas:
     SensorMetadata:
