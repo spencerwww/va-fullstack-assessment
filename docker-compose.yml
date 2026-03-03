@@ -19,6 +19,7 @@ services:
     volumes:
       - ./api/src:/app/src
       - ./api/openapi.yaml:/app/openapi.yaml
+    command: npm run dev
 
   frontend:
     build:

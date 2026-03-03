@@ -4,7 +4,7 @@
   "private": true,
   "description": "Vehicle Analytics technical assessment",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "nodemon --watch src --watch openapi.yaml --exec ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js"
   },
