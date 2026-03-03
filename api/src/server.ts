@@ -6,6 +6,8 @@ import swaggerUi from 'swagger-ui-express';
 import fs from 'fs';
 import yaml from 'js-yaml';
 
+import { SensorMetadata, sensorMetadataStore, loadSensorMetadata } from './index';
+
 const app = express();
 const openapiSpec = yaml.load(fs.readFileSync('./openapi.yaml', 'utf-8')) as object;
 app.use(cors({ origin: true, credentials: false }));
@@ -63,6 +65,24 @@ app.get('/sensors', async (_req, res) => {
   } 
 });
 
+app.get('/sensors/:sensorId', async (req, res) => {
+  try {
+    const sensorId = Number(req.params.sensorId);
+    if (isNaN(sensorId)) {
+      return res.status(400).json({ error: 'Invalid sensorId' });
+    }
+
+    const metadata = sensorMetadataStore.get(sensorId);
+    if (!metadata) {
+      return res.status(404).json({ error: 'Sensor not found' });
+    }
+
+    return res.json(metadata);
+  } catch {
+    return res.status(500).json({ error: 'Unexpected server error' });
+  }
+});
+
 const server = http.createServer(app);
 
 const PORT = process.env.PORT || 4000;
@@ -70,4 +90,5 @@ const HOST = process.env.HOST || '0.0.0.0';
 
 server.listen(Number(PORT), HOST, () => {
   console.log(`API server listening on http://${HOST}:${PORT}`);
+  loadSensorMetadata();
 });
