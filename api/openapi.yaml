@@ -9,6 +9,8 @@ info:
 paths:
   /health:
     get:
+      tags:
+        - Health
       operationId: getHealth
       summary: Health check (implemented in skeleton)
       responses:
@@ -73,23 +75,17 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                example:
-                  error: 'Unexpected server error'
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Unexpected server error'
         '503':
           description: Service unavailable
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                example:
-                  error: 'Failed to retrieve sensors'
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Failed to retrieve sensors'
   /sensors/{sensorId}:
     get:
       tags:
@@ -116,38 +112,29 @@ paths:
                 sensorName: 'BATTERY_TEMPERATURE'
                 unit: 'C'
         '400':
-          description: Invalid sensor ID
+          description: Invalid sensor Id
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                example:
-                  error: 'Invalid sensorID'
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Invalid sensorId'
         '404':
           description: Sensor not found
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                example:
-                  error: 'Sensor not found'
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Sensor not found'
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                example:
-                  error: 'Unexpected server error'
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Unexpected server error'
 components:
   schemas:
     SensorMetadata:
@@ -163,6 +150,13 @@ components:
         sensorId: 1000000070501
         sensorName: 'BATTERY_TEMPERATURE'
         unit: 'C'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      example:
+        error: 'An error occurred'
 servers:
   - url: http://localhost:4000
     description: Local development server
