@@ -57,19 +57,19 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SensorMetadata'
-                example:
-                  - sensorId: 1000000070501
-                    sensorName: 'BATTERY_TEMPERATURE'
-                    unit: 'C'
-                  - sensorId: 2000000051201
-                    sensorName: 'TYRE_PRESSURE_FL'
-                    unit: 'kPa'
-                  - sensorId: 3000000060001
-                    sensorName: 'PACK_CURRENT'
-                    unit: 'A'
-                  - sensorId: 3000000060101
-                    sensorName: 'VEHICLE_SPEED'
-                    unit: 'km/h'
+              example:
+                - sensorId: 1000000070501
+                  sensorName: 'BATTERY_TEMPERATURE'
+                  unit: 'C'
+                - sensorId: 2000000051201
+                  sensorName: 'TYRE_PRESSURE_FL'
+                  unit: 'kPa'
+                - sensorId: 3000000060001
+                  sensorName: 'PACK_CURRENT'
+                  unit: 'A'
+                - sensorId: 3000000060101
+                  sensorName: 'VEHICLE_SPEED'
+                  unit: 'km/h'
         '500':
           description: Internal server error
           content:
@@ -141,7 +141,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/SensorData'
+                  $ref: '#/components/schemas/SensorReading'
               example:
                 - sensorId: 1000000070501
                   value: 33.7018539186185
@@ -185,7 +185,7 @@ components:
           type: string
       example:
         error: 'An error occurred'
-    SensorData:
+    SensorReading:
       type: object
       properties:
         sensorId:

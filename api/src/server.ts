@@ -7,6 +7,7 @@ import fs from 'fs';
 import yaml from 'js-yaml';
 
 import { SensorMetadata, sensorMetadataStore, loadSensorMetadata } from './index';
+import sensorsRouter from './routes/sensors';
 
 const app = express();
 const openapiSpec = yaml.load(fs.readFileSync('./openapi.yaml', 'utf-8')) as object;
@@ -43,31 +44,7 @@ app.get('/health', async (_req, res) => {
 // Do not modify the emulator service.
 // ---------------------------------------------------------------------------
 
-app.get('/sensors', async (_req, res) => {
-  try {
-    return res.json(Array.from(sensorMetadataStore.values()));
-  } catch {
-    return res.status(500).json({ error: 'Unexpected server error' });
-  } 
-});
-
-app.get('/sensors/:sensorId', async (req, res) => {
-  try {
-    const sensorId = Number(req.params.sensorId);
-    if (isNaN(sensorId)) {
-      return res.status(400).json({ error: 'Invalid sensorId' });
-    }
-
-    const metadata = sensorMetadataStore.get(sensorId);
-    if (!metadata) {
-      return res.status(404).json({ error: 'Sensor not found' });
-    }
-
-    return res.json(metadata);
-  } catch {
-    return res.status(500).json({ error: 'Unexpected server error' });
-  }
-});
+app.use('/sensors', sensorsRouter);
 
 const server = http.createServer(app);
 
