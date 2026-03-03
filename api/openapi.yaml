@@ -42,6 +42,8 @@ paths:
                   emulator: false
   /sensors:
     get:
+      tags:
+        - Sensors
       operationId: getSensors
       summary: Retrieve a list of available sensors
       responses:
@@ -52,14 +54,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    sensorId:
-                      type: integer
-                    sensorName:
-                      type: string
-                    unit:
-                      type: string
+                  $ref: '#/components/schemas/SensorMetadata'
                 example:
                   - sensorId: 1000000070501
                     sensorName: 'BATTERY_TEMPERATURE'
@@ -73,6 +68,17 @@ paths:
                   - sensorId: 3000000060101
                     sensorName: 'VEHICLE_SPEED'
                     unit: 'km/h'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                example:
+                  error: 'Unexpected server error'
         '503':
           description: Service unavailable
           content:
@@ -84,6 +90,21 @@ paths:
                     type: string
                 example:
                   error: 'Failed to retrieve sensors'
+components:
+  schemas:
+    SensorMetadata:
+      type: object
+      properties:
+        sensorId:
+          type: number
+        sensorName:
+          type: string
+        unit:
+          type: string
+      example:
+        sensorId: 1000000070501
+        sensorName: 'BATTERY_TEMPERATURE'
+        unit: 'C'
 servers:
   - url: http://localhost:4000
     description: Local development server
