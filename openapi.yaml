@@ -9,35 +9,10 @@ info:
 paths:
   /health:
     get:
-      operationId: getHealth
       summary: Health check (implemented in skeleton)
       responses:
         '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: 'ok'
-                  emulator:
-                    type: boolean
-                    example: true
-        '503':
-          description: Unhealthy
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: 'unhealthy'
-                  emulator:
-                    type: boolean
-                    example: false
 servers:
   - url: http://localhost:4000
     description: Local development server

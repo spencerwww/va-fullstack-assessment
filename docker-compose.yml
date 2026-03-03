@@ -16,6 +16,9 @@ services:
       - EMULATOR_URL=http://emulator:3001
     depends_on:
       - emulator
+    volumes:
+      - ./api/src:/app/src
+      - ./api/openapi.yaml:/app/openapi.yaml
 
   frontend:
     build:

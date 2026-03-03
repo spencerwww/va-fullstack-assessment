@@ -41,6 +41,19 @@ app.get('/health', async (_req, res) => {
 // Do not modify the emulator service.
 // ---------------------------------------------------------------------------
 
+app.get('/sensors', async (_req, res) => {
+  try {
+    const r = await fetch(`${EMULATOR_URL.replace(/\/$/, '')}/sensors`);
+    if (r.ok) {
+      const sensors = await r.json();
+      return res.json(sensors);
+    }
+  } catch {
+    // connection failed
+  }
+  res.status(503).json({ error: 'Failed to retrieve sensors' });
+});
+
 const server = http.createServer(app);
 
 const PORT = process.env.PORT || 4000;

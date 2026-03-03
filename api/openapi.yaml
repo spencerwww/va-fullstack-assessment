@@ -21,10 +21,11 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: 'ok'
                   emulator:
                     type: boolean
-                    example: true
+                example:
+                  status: 'ok'
+                  emulator: true
         '503':
           description: Unhealthy
           content:
@@ -34,10 +35,55 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: 'unhealthy'
                   emulator:
                     type: boolean
-                    example: false
+                example:
+                  status: 'unhealthy'
+                  emulator: false
+  /sensors:
+    get:
+      operationId: getSensors
+      summary: Retrieve a list of available sensors
+      responses:
+        '200':
+          description: A list of sensors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    sensorId:
+                      type: integer
+                    sensorName:
+                      type: string
+                    unit:
+                      type: string
+                example:
+                  - sensorId: 1000000070501
+                    sensorName: 'BATTERY_TEMPERATURE'
+                    unit: 'C'
+                  - sensorId: 2000000051201
+                    sensorName: 'TYRE_PRESSURE_FL'
+                    unit: 'kPa'
+                  - sensorId: 3000000060001
+                    sensorName: 'PACK_CURRENT'
+                    unit: 'A'
+                  - sensorId: 3000000060101
+                    sensorName: 'VEHICLE_SPEED'
+                    unit: 'km/h'
+        '503':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                example:
+                  error: 'Failed to retrieve sensors'
 servers:
   - url: http://localhost:4000
     description: Local development server
