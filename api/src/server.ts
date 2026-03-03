@@ -8,6 +8,7 @@ import yaml from 'js-yaml';
 
 import { SensorMetadata, sensorMetadataStore, loadSensorMetadata } from './index';
 import sensorsRouter from './routes/sensors';
+import healthRouter from './routes/health';
 
 const app = express();
 const openapiSpec = yaml.load(fs.readFileSync('./openapi.yaml', 'utf-8')) as object;
@@ -16,19 +17,9 @@ app.use(express.json());
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpec));
 
 // Default to local emulator when EMULATOR_URL is not provided.
-const EMULATOR_URL = process.env.EMULATOR_URL || 'http://localhost:3001';
+export const EMULATOR_URL = process.env.EMULATOR_URL || 'http://localhost:3001';
 
-app.get('/health', async (_req, res) => {
-  try {
-    const r = await fetch(`${EMULATOR_URL.replace(/\/$/, '')}/sensors`);
-    if (r.ok) {
-      return res.json({ status: 'ok', emulator: true });
-    }
-  } catch {
-    // connection failed
-  }
-  res.status(503).json({ status: 'unhealthy', emulator: false });
-});
+app.use('/health', healthRouter);
 
 // ---------------------------------------------------------------------------
 // Assessment: implement the API below.

@@ -1,10 +1,10 @@
+import { EMULATOR_URL } from './server';
+
 export interface SensorMetadata {
   sensorId: number;
   sensorName: string;
   unit: string;
 }
-
-const EMULATOR_URL = process.env.EMULATOR_URL || 'http://localhost:3001';
 
 export const sensorMetadataStore = new Map<number, SensorMetadata>();
 
