@@ -78,14 +78,6 @@ paths:
                 $ref: '#/components/schemas/Error'
               example:
                 error: 'Unexpected server error'
-        '503':
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                error: 'Failed to retrieve sensors'
   /sensors/{sensorId}:
     get:
       tags:

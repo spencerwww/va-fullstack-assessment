@@ -45,21 +45,7 @@ app.get('/health', async (_req, res) => {
 
 app.get('/sensors', async (_req, res) => {
   try {
-    let r: Response;
-
-    try {
-      r = await fetch(`${EMULATOR_URL.replace(/\/$/, '')}/sensors`);
-    } catch {
-      return res.status(503).json({ error: 'Failed to retrieve sensors' });
-    }
-
-    if (!r.ok) {
-      return res.status(503).json({ error: 'Failed to retrieve sensors' });
-    }
-
-    const sensors = await r.json();
-    return res.json(sensors);
-
+    return res.json(Array.from(sensorMetadataStore.values()));
   } catch {
     return res.status(500).json({ error: 'Unexpected server error' });
   } 
