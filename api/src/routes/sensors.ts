@@ -4,6 +4,9 @@ import { sensorMetadataStore } from "../store";
 const router = Router();
 router.get('/', async (_req, res) => {
   try {
+    if (sensorMetadataStore.size === 0) {
+      return res.status(503).json({ error: 'Sensor metadata not yet available' });
+    } 
     return res.json(Array.from(sensorMetadataStore.values()));
   } catch {
     return res.status(500).json({ error: 'Unexpected server error' });

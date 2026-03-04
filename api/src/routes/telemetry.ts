@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { latestReadingsStore } from "../store";
+import { latestReadingsStore, sseClients } from "../store";
 
 const router = Router();
 
@@ -9,6 +9,19 @@ router.get('/', async (_req, res) => {
     } catch {
         return res.status(500).json({ error: 'Unexpected server error' });
     }
+});
+
+router.get('/stream', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders();
+
+    sseClients.add(res);
+
+    req.on('close', () => {
+        sseClients.delete(res);
+    });
 });
 
 router.get('/:sensorId', async (req, res) => {

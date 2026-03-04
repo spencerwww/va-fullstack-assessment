@@ -3,7 +3,8 @@ import { EMULATOR_URL } from './server';
 import {
   SensorMetadata,
   sensorMetadataStore,
-  latestReadingsStore
+  latestReadingsStore,
+  sseClients
 } from './store';
 import { parseReading, checkOutOfRange } from './validation';
 
@@ -36,6 +37,13 @@ export function connectToEmulator() {
       if (parsed) {
         latestReadingsStore.set(parsed.sensorId, parsed);
         checkOutOfRange(parsed);
+        sseClients.forEach(client => {
+          try {
+            client.write(`event: reading\ndata: ${JSON.stringify(parsed)}\n\n`);
+          } catch {
+            sseClients.delete(client);
+          }
+        });
       }
     } catch (err) {
       console.error('Failed to parse reading: ', err);

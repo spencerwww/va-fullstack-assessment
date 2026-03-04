@@ -1,3 +1,5 @@
+import express from 'express';
+
 export interface SensorMetadata {
   sensorId: number;
   sensorName: string;
@@ -12,3 +14,4 @@ export interface SensorReading {
 
 export const sensorMetadataStore = new Map<number, SensorMetadata>();
 export const latestReadingsStore = new Map<number, SensorReading>();
+export const sseClients = new Set<express.Response>();    

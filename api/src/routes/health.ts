@@ -12,7 +12,7 @@ router.get('/', async (_req, res) => {
   } catch {
     // connection failed
   }
-  res.status(503).json({ status: 'unhealthy', emulator: false });
+  res.status(503).json({ error: 'Service is currently unhealthy, emulator could not be reached' });
 });
 
 export default router;
