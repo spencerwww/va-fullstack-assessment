@@ -6,9 +6,10 @@ import swaggerUi from 'swagger-ui-express';
 import fs from 'fs';
 import yaml from 'js-yaml';
 
-import { SensorMetadata, sensorMetadataStore, loadSensorMetadata } from './index';
+import { SensorMetadata, sensorMetadataStore, loadSensorMetadata, connectToEmulator } from './index';
 import sensorsRouter from './routes/sensors';
 import healthRouter from './routes/health';
+import telemetryRouter from './routes/telemetry';
 
 const app = express();
 const openapiSpec = yaml.load(fs.readFileSync('./openapi.yaml', 'utf-8')) as object;
@@ -36,6 +37,7 @@ app.use('/health', healthRouter);
 // ---------------------------------------------------------------------------
 
 app.use('/sensors', sensorsRouter);
+app.use('/telemetry', telemetryRouter);
 
 const server = http.createServer(app);
 
@@ -45,4 +47,5 @@ const HOST = process.env.HOST || '0.0.0.0';
 server.listen(Number(PORT), HOST, () => {
   console.log(`API server listening on http://${HOST}:${PORT}`);
   loadSensorMetadata();
+  connectToEmulator();
 });
