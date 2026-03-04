@@ -6,7 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import fs from 'fs';
 import yaml from 'js-yaml';
 
-import { SensorMetadata, sensorMetadataStore, loadSensorMetadata, connectToEmulator } from './index';
+import { loadSensorMetadata, connectToEmulator } from './emulator';
 import sensorsRouter from './routes/sensors';
 import healthRouter from './routes/health';
 import telemetryRouter from './routes/telemetry';

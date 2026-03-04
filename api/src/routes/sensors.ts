@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { sensorMetadataStore } from "../index";
+import { sensorMetadataStore } from "../store";
 
 const router = Router();
 router.get('/', async (_req, res) => {
