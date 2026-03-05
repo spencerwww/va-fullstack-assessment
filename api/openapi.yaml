@@ -129,6 +129,14 @@ paths:
                 $ref: '#/components/schemas/Error'
               example:
                 error: 'Unexpected server error'
+        '503':
+          description: No sensor metadata available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Sensor metadata not yet available'
   /telemetry:
     get:
       tags:

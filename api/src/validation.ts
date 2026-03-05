@@ -1,4 +1,4 @@
-import { SensorMetadata, SensorReading, sensorMetadataStore, latestReadingsStore } from './store';
+import { SensorReading, sensorMetadataStore } from './store';
 
 const VALID_RANGES: Record<string, { min: number; max: number }> = {
   BATTERY_TEMPERATURE: { min: 20, max: 80 },

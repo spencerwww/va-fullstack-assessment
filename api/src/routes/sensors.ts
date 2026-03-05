@@ -19,6 +19,10 @@ router.get('/:sensorId', async (req, res) => {
     if (isNaN(sensorId)) {
       return res.status(400).json({ error: 'Invalid sensorId' });
     }
+    
+    if (sensorMetadataStore.size === 0) {
+      return res.status(503).json({ error: 'Sensor metadata not yet available' });
+    } 
 
     const metadata = sensorMetadataStore.get(sensorId);
     if (!metadata) {
