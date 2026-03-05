@@ -52,3 +52,67 @@ export async function fetchHealth(timeoutMs = 3000): Promise<HealthResponse> {
 // or whatever paths and response shapes you defined). Use the types above
 // or define new ones to match your API.
 // ---------------------------------------------------------------------------
+
+export async function fetchSensors(timeoutMs = 3000): Promise<SensorMetadata[]> {
+  const url = `${API_BASE_URL}/sensors`;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { mode: 'cors', signal: controller.signal });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(data.error ?? `Sensors: ${res.status} ${res.statusText}`);
+    }
+    return data as SensorMetadata[];
+  } catch (err: any) {
+    if (err?.name === 'AbortError') {
+      throw new Error('Sensors fetch timed out');
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export async function fetchTelemetry(timeoutMs = 3000): Promise<TelemetryReading[]> {
+  const url = `${API_BASE_URL}/telemetry`;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { mode: 'cors', signal: controller.signal });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(data.error ?? `Telemetry: ${res.status} ${res.statusText}`);
+    }
+    return data as TelemetryReading[];
+  } catch (err: any) {
+    if (err?.name === 'AbortError') {
+      throw new Error('Telemetry fetch timed out');
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export function subscribeToTelemetry(onData: (reading: TelemetryReading) => void, onError: (err: Error) => void) {
+  const url = `${API_BASE_URL}/telemetry/stream`;
+  const eventSource = new EventSource(url, { withCredentials: false });
+
+  eventSource.addEventListener('reading', (event) => {
+    try {
+      const data = JSON.parse(event.data) as TelemetryReading;
+      onData(data);
+    } catch (err) {
+      onError(new Error('Failed to parse telemetry data'));
+    }
+  });
+
+  eventSource.onerror = (err) => {
+    onError(new Error('Telemetry stream error'));
+  };
+
+  return () => {
+    eventSource.close();
+  };
+}
