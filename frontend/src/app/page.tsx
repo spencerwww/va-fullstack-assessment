@@ -6,6 +6,7 @@ import { fetchHealth, API_BASE_URL, fetchSensors } from '../lib/api-client';
 import { useTelemetry } from '../hooks/useTelemetry';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import SensorCard from '../components/custom/sensor-card';
+import SensorChart from '../components/custom/sensor-chart';
 
 export default function Page() {
   // 'checking' → initial state; 'ok' or 'unhealthy' after first health check.
@@ -81,7 +82,7 @@ export default function Page() {
         </div>
       </header>
 
-      <div className="flex fleex-1 min-h-0">
+      <div className="flex flex-1 min-h-0">
           <aside className="w-64 flex-shrink-0 overflow-y-auto overflow-x-hidden border-r border-border bg-background p-3 flex flex-col gap-2">
             {Array.from(sensors.values()).map(sensor => {
               const reading = latestReadings.get(sensor.sensorId);
@@ -95,6 +96,9 @@ export default function Page() {
               );
             })}
           </aside>
+          <main className="w-full">
+              <SensorChart sensorName="BATTERY_TEMPERATURE" unit="°C" reading={latestReadings.get(1000000070501)} history={history.get(1000000070501) || []} />
+          </main>
       </div>
     </>
   );

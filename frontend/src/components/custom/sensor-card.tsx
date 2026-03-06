@@ -15,7 +15,7 @@ interface TelemetryProps {
   unit: string;
 }
 
-const VALID_RANGES: Record<string, { min: number; max: number }> = {
+export const VALID_RANGES: Record<string, { min: number; max: number }> = {
   BATTERY_TEMPERATURE: { min: 20, max: 80 },
   MOTOR_TEMPERATURE: { min: 30, max: 120 },
   TYRE_PRESSURE_FL: { min: 150, max: 250 },
