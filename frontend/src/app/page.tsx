@@ -2,13 +2,16 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { fetchHealth, API_BASE_URL } from '../lib/api-client';
+import { fetchHealth, API_BASE_URL, fetchSensors } from '../lib/api-client';
+import { useTelemetry } from '../hooks/useTelemetry';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import SensorCard from '../components/custom/sensor-card';
 
 export default function Page() {
   // 'checking' → initial state; 'ok' or 'unhealthy' after first health check.
   const [healthStatus, setHealthStatus] = useState<'ok' | 'unhealthy' | 'checking'>('checking');
   const [healthError, setHealthError] = useState<string | null>(null);
+  const { sensors, latestReadings, history } = useTelemetry();
 
   useEffect(() => {
     let cancelled = false;
@@ -42,7 +45,8 @@ export default function Page() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <>
+    
       <header className="border-b border-border bg-background/80 px-6 py-4">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -77,52 +81,21 @@ export default function Page() {
         </div>
       </header>
 
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-8">
-        {healthError && healthStatus === 'unhealthy' && (
-          <Card className="border-destructive/40 bg-destructive/10 text-destructive-foreground">
-            <CardHeader className="py-4">
-              <CardTitle className="text-sm">Cannot reach API</CardTitle>
-              <CardDescription className="text-xs text-destructive-foreground/80">
-                {healthError}
-                {healthError.includes('fetch') || healthError.includes('Failed to reach')
-                  ? ` Ensure the API is running at ${API_BASE_URL} (e.g. va-fullstack-assessment: docker compose up, or cd api && npm run dev).`
-                  : ''}
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        )}
-
-        <Card className="border-muted">
-          <CardHeader>
-            <CardTitle className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
-              Dashboard data
-            </CardTitle>
-            <CardDescription>
-              This skeleton only calls <code className="rounded bg-muted px-1 py-0.5 text-[10px]">GET /health</code>.
-              Implement consumption of your API’s <strong>metadata</strong> and <strong>data</strong> routes (designed
-              in the API section) to populate the dashboard: resolve sensorId → sensorName and unit, and display
-              latest telemetry (and optionally a live stream). Use <code className="rounded bg-muted px-1 py-0.5 text-[10px]">src/lib/api-client.ts</code> to add
-              fetch functions for your endpoints, then wire them up here.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>
-              Once connected, show multiple sensors, a primary metric, sensible formatting (decimal places, units),
-              and consider status (e.g. colours for safe/unsafe ranges). Use shadcn/ui for layout and components.
-            </p>
-          </CardContent>
-        </Card>
-
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold tracking-tight">All sensors</h2>
-          <div className="overflow-x-auto rounded-xl border border-border bg-card">
-            <div className="flex min-h-[120px] items-center justify-center p-6 text-center text-sm text-muted-foreground">
-              No sensor data yet. Add your metadata and telemetry API calls in <code className="rounded bg-muted px-1 py-0.5 text-xs">api-client.ts</code> and
-              use them in this page to populate the table.
-            </div>
-          </div>
-        </section>
+      <div className="flex fleex-1 min-h-0">
+          <aside className="w-64 flex-shrink-0 overflow-y-auto overflow-x-hidden border-r border-border bg-background p-3 flex flex-col gap-2">
+            {Array.from(sensors.values()).map(sensor => {
+              const reading = latestReadings.get(sensor.sensorId);
+              return (
+                <SensorCard
+                  key={sensor.sensorId}
+                  sensorName={sensor.sensorName}
+                  value={reading?.value ?? 0}
+                  unit={sensor.unit}
+                />
+              );
+            })}
+          </aside>
       </div>
-    </main>
+    </>
   );
 }
