@@ -29,3 +29,7 @@ services:
       - '3000:3000'
     depends_on:
       - api
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    command: npm run dev
