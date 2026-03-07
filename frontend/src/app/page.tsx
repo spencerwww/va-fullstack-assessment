@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { fetchHealth, API_BASE_URL, fetchSensors } from '../lib/api-client';
 import { useTelemetry } from '../hooks/useTelemetry';
 import SensorCard from '../components/custom/sensor-card';
@@ -47,6 +47,15 @@ export default function Page() {
       cancelled = true;
     };
   }, []);
+
+  const sensorIdByName = useMemo(() => {
+    const map = new Map<string, number>();
+    sensors.forEach(s => map.set(s.sensorName, s.sensorId));
+    return map;
+  }, [sensors]);
+
+  const getReading = (name: string) => latestReadings.get(sensorIdByName.get(name) ?? -1);
+  const getHistory = (name: string) => history.get(sensorIdByName.get(name) ?? -1) || [];
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
@@ -107,14 +116,14 @@ export default function Page() {
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="PACK_CURRENT"
                   unit="A"
-                  reading={latestReadings.get(3000000060001)}
-                  history={history.get(3000000060001) || []}
+                  reading={getReading('PACK_CURRENT')}
+                  history={getHistory('PACK_CURRENT')}
                   colour="hsl(var(--chart-2))" /></div>
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="PACK_VOLTAGE"
                   unit="V"
-                  reading={latestReadings.get(3000000060002)}
-                  history={history.get(3000000060002) || []}
+                  reading={getReading('PACK_VOLTAGE')}
+                  history={getHistory('PACK_VOLTAGE')}
                   colour="hsl(var(--chart-2))" /></div>
               </div>
               {/* Bottom Row */}
@@ -122,29 +131,29 @@ export default function Page() {
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="VEHICLE_SPEED"
                   unit="km/h"
-                  reading={latestReadings.get(3000000060101)}
-                  history={history.get(3000000060101) || []}
+                  reading={getReading('VEHICLE_SPEED')}
+                  history={getHistory('VEHICLE_SPEED')}
                   colour="hsl(var(--chart-3))" /></div>
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="STEERING_ANGLE"
                   unit="deg"
-                  reading={latestReadings.get(3000000060102)}
-                  history={history.get(3000000060102) || []}
+                  reading={getReading('STEERING_ANGLE')}
+                  history={getHistory('STEERING_ANGLE')}
                   colour="hsl(var(--chart-3))" /></div>
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="BRAKE_PRESSURE_FRONT"
                   unit="bar"
-                  reading={latestReadings.get(3000000060103)}
-                  history={history.get(3000000060103) || []}
+                  reading={getReading('BRAKE_PRESSURE_FRONT')}
+                  history={getHistory('BRAKE_PRESSURE_FRONT')}
                   colour="hsl(var(--chart-3))" /></div>
 
               </div>
               {/* Visual Indicators */}
               <div className="flex flex-row flex-[3] min-h-0">
-                <SteeringWheel angle={latestReadings.get(3000000060102)?.value ?? 0} />
-                <Speedometer speed={latestReadings.get(3000000060101)?.value ?? 0}/>
-                <BrakeBar pressure={latestReadings.get(3000000060103)?.value ?? 0} />
-                <PackSocBar packSoc={latestReadings.get(3000000060003)?.value ?? 0} />
+                <SteeringWheel angle={getReading('STEERING_ANGLE')?.value ?? 0} />
+                <Speedometer speed={getReading('VEHICLE_SPEED')?.value ?? 0}/>
+                <BrakeBar pressure={getReading('BRAKE_PRESSURE_FRONT')?.value ?? 0} />
+                <PackSocBar packSoc={getReading('PACK_SOC')?.value ?? 0} />
               </div>
             </div>
             {/* Right Column */}
@@ -153,46 +162,46 @@ export default function Page() {
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="TYRE_PRESSURE_FL"
                   unit="kPa"
-                  reading={latestReadings.get(2000000051201)}
-                  history={history.get(2000000051201) || []}
+                  reading={getReading('TYRE_PRESSURE_FL')}
+                  history={getHistory('TYRE_PRESSURE_FL')}
                   colour="hsl(var(--chart-1))" /></div>
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="TYRE_PRESSURE_FR"
                   unit="kPa"
-                  reading={latestReadings.get(2000000051202)}
-                  history={history.get(2000000051202) || []}
+                  reading={getReading('TYRE_PRESSURE_FR')}
+                  history={getHistory('TYRE_PRESSURE_FR')}
                   colour="hsl(var(--chart-1))" /></div>
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="TYRE_PRESSURE_RL"
                   unit="kPa"
-                  reading={latestReadings.get(2000000051203)}
-                  history={history.get(2000000051203) || []}
+                  reading={getReading('TYRE_PRESSURE_RL')}
+                  history={getHistory('TYRE_PRESSURE_RL')}
                   colour="hsl(var(--chart-1))" /></div>
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="TYRE_PRESSURE_RR"
                   unit="kPa"
-                  reading={latestReadings.get(2000000051204)}
-                  history={history.get(2000000051204) || []}
+                  reading={getReading('TYRE_PRESSURE_RR')}
+                  history={getHistory('TYRE_PRESSURE_RR')}
                   colour="hsl(var(--chart-1))" /></div>
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="MOTOR_TEMPERATURE"
                   unit="°C"
-                  reading={latestReadings.get(1000000070502)}
-                  history={history.get(1000000070502) || []}
+                  reading={getReading('MOTOR_TEMPERATURE')}
+                  history={getHistory('MOTOR_TEMPERATURE')}
                   colour="hsl(var(--chart-5))" /></div>
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="BATTERY_TEMPERATURE"
                   unit="°C"
-                  reading={latestReadings.get(1000000070501)}
-                  history={history.get(1000000070501) || []}
+                  reading={getReading('BATTERY_TEMPERATURE')}
+                  history={getHistory('BATTERY_TEMPERATURE')}
                   colour="hsl(var(--chart-5))" /></div>
               </div>
               <div className="flex flex-col flex-[3] min-h-0">
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="PACK_SOC"
                   unit="%"
-                  reading={latestReadings.get(3000000060003)}
-                  history={history.get(3000000060003) || []}
+                  reading={getReading('PACK_SOC')}
+                  history={getHistory('PACK_SOC')}
                   colour="hsl(var(--chart-2))" /></div>   
                 </div>
               </div>
