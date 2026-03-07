@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import SensorCard from '../components/custom/sensor-card';
 import SensorChart from '../components/custom/sensor-chart';
 import BrakeBar from '../components/custom/brake-bar';
+import PackSocBar from '../components/custom/pack-soc-bar';
 
 export default function Page() {
   // 'checking' → initial state; 'ok' or 'unhealthy' after first health check.
@@ -101,7 +102,7 @@ export default function Page() {
             {/* Left Column */}
             <div className="flex flex-col w-2/3 min-h-0">
               {/* Top Row */}
-              <div className="flex flex-col flex-[2] min-h-0">
+              <div className="flex flex-col flex-[4] min-h-0">
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="PACK_CURRENT"
                   unit="A"
@@ -116,7 +117,7 @@ export default function Page() {
                   colour="hsl(var(--chart-2))" /></div>
               </div>
               {/* Bottom Row */}
-              <div className="flex flex-col flex-[4] min-h-0">
+              <div className="flex flex-col flex-[8] min-h-0">
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="VEHICLE_SPEED"
                   unit="km/h"
@@ -137,16 +138,17 @@ export default function Page() {
                   colour="hsl(var(--chart-3))" /></div>
 
               </div>
-              <div className="flex flex-row flex-[2] min-h-0">
+              {/* Visual Indicators */}
+              <div className="flex flex-row flex-[3] min-h-0">
                 <Card className="rounded-none flex flex-col h-full w-1/4"></Card>
                 <Card className="rounded-none flex flex-col h-full w-1/4"></Card>
                 <BrakeBar pressure={latestReadings.get(3000000060103)?.value ?? 0} />
-                <Card className="rounded-none flex flex-col h-full w-1/4"></Card>
+                <PackSocBar packSoc={latestReadings.get(3000000060003)?.value ?? 0} />
               </div>
             </div>
             {/* Right Column */}
             <div className="flex flex-col w-1/3 min-h-0">
-              <div className="flex flex-col flex-[6] min-h-0">
+              <div className="flex flex-col flex-[12] min-h-0">
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="TYRE_PRESSURE_FL"
                   unit="kPa"
@@ -184,7 +186,7 @@ export default function Page() {
                   history={history.get(1000000070501) || []}
                   colour="hsl(var(--chart-5))" /></div>
               </div>
-              <div className="flex flex-col flex-[2] min-h-0">
+              <div className="flex flex-col flex-[3] min-h-0">
                 <div className="flex-1 min-h-0"><SensorChart
                   sensorName="PACK_SOC"
                   unit="%"
