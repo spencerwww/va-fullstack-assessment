@@ -7,6 +7,7 @@ import { useTelemetry } from '../hooks/useTelemetry';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import SensorCard from '../components/custom/sensor-card';
 import SensorChart from '../components/custom/sensor-chart';
+import BrakeBar from '../components/custom/brake-bar';
 
 export default function Page() {
   // 'checking' → initial state; 'ok' or 'unhealthy' after first health check.
@@ -134,10 +135,13 @@ export default function Page() {
                   reading={latestReadings.get(3000000060103)}
                   history={history.get(3000000060103) || []}
                   colour="hsl(var(--chart-3))" /></div>
-                
-              </div>
-              <div className="flex flex-col flex-[2] min-h-0">
 
+              </div>
+              <div className="flex flex-row flex-[2] min-h-0">
+                <Card className="rounded-none flex flex-col h-full w-1/4"></Card>
+                <Card className="rounded-none flex flex-col h-full w-1/4"></Card>
+                <BrakeBar pressure={latestReadings.get(3000000060103)?.value ?? 0} />
+                <Card className="rounded-none flex flex-col h-full w-1/4"></Card>
               </div>
             </div>
             {/* Right Column */}
