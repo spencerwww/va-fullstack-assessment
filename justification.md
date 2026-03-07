@@ -108,18 +108,63 @@ Use this section to briefly explain your frontend design decisions. Bullet point
 
 - Link to your low-fidelity Figma mockup and what it shows:
 
+https://www.figma.com/design/knDEAwYKND6wre5NSCcOvc/Vehicle-Dynamics-Dashboard?node-id=0-1&t=vekMD4IprkFLbKyi-1
+
+- Header contains a title and API connection status. Shows the sidebar that changes colour depending if the colour is in range, nearing out of range and out of range.
+Main body, One chart for each sensor. The bottom shows visual indicators for steering angle, vehicle speed brake pressure and pack state of charge.
+
+
+
 ### 2. Layout and information hierarchy
 
 - Why you structured the dashboard the way you did:
+
+- The header shows API connection status to indicate no issues with the backend.
+- Sidebar provides a quick way to view current values for each sensor, as well as colour to indicate safe, warning and danger.
+- Vehicle speed, steering angle and brake pressure have taller and longer charts, as they are the most important (vehicle dynamics).
+- Pack voltage and pack voltage are smaller, but share time axis to show relation power output relation to vehicle dynamics.
+- Right column consists of all tyre pressures, the two temperature sensors and pack SOC at the bottom. pack SOC is separated as it is least likely to have large fluctuations (in reality).
+- Red reference areas have been added to show when a value goes out of range for clarity.
+- Each chart header contains the current value again for quick reference.
+- Visual indicators for vehicle dynamics and pack SOC have been added at the bottom for an intuitive visual of each value.
+- Chart layout has been prioritised for readability and referencing between each value. As such, charts use a shared time axis, to easily compare values at a given time.
 
 ### 3. API consumption
 
 - How you use `/sensors` and `/telemetry` (and WebSocket, if used):
 
+- `useTelemetry()` handles all telemetry usage.
+- `/sensors` is called once upon startup to gather sensormetadata. `/telemetry` is also called to initially populate data. The metadata and data are then used to populate initial values for the sidebar and charts.
+- `/telemetry/stream` is then used to update latest readings and history array, which is used to update data.
+
 ### 4. Visual design and usability
 
 - Choices around colours, typography, states, and responsiveness:
 
+- Chart colours have been separated by type for clarity (vehicle dynamics, pack state, tyre pressure, and temperature).
+
+- Sidebar uses green for safe, amber for warning and red for unsafe
+
+- Value takes priority in typography, bold or larger. Unit is least important, and is smaller and muted.
+
+- Sidebar cards have four different states - the three colours and no colour for no data yet.
+
+- Charts have two states - no data yet and receiving data. Red reference areas are used to show danger zone
+
+- Charts are updated every time a new value comes in for that sensor via telemetry stream, maximising responsiveness.
+
 ### 5. Trade-offs and limitations
 
 - Anything you would do with more time or a different stack:
+
+- If I had more time, I would implement detailed popups when clicking on a chart or a sensor on the sidebar.
+
+- This could show additional information, such as the minimum and maximum value reached, min and max ranges, and number of times gone out of range.
+
+- I would add the ability to add scaleable time windows, and to store all history of data from startup.
+
+- Ability to export recorded data.
+
+- Interactive charts, to go back and view data at a certain time.
+
+- Configurable layout, ability to add, remove, edit, scale charts to your liking.
