@@ -7,6 +7,7 @@ import { useTelemetry } from '../hooks/useTelemetry';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import SensorCard from '../components/custom/sensor-card';
 import SensorChart from '../components/custom/sensor-chart';
+import SteeringWheel from '../components/custom/steering-wheel';
 import BrakeBar from '../components/custom/brake-bar';
 import PackSocBar from '../components/custom/pack-soc-bar';
 
@@ -140,7 +141,7 @@ export default function Page() {
               </div>
               {/* Visual Indicators */}
               <div className="flex flex-row flex-[3] min-h-0">
-                <Card className="rounded-none flex flex-col h-full w-1/4"></Card>
+                <SteeringWheel angle={latestReadings.get(3000000060102)?.value ?? 0} />
                 <Card className="rounded-none flex flex-col h-full w-1/4"></Card>
                 <BrakeBar pressure={latestReadings.get(3000000060103)?.value ?? 0} />
                 <PackSocBar packSoc={latestReadings.get(3000000060003)?.value ?? 0} />
