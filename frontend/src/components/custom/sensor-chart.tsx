@@ -22,6 +22,7 @@ interface SensorChartProps {
   unit: string;
   reading: TelemetryReading | undefined;
   history: TelemetryReading[];
+  colour: string;
 }
 
 const chartConfig = {
@@ -30,7 +31,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-function SensorChart({ sensorName, unit, reading, history }: SensorChartProps) {
+function SensorChart({ sensorName, unit, reading, history, colour = "hsl((var--chart-1))" }: SensorChartProps) {
   const now = Math.floor(Date.now() / 1000);
   const windowStart = now - 60;
 
@@ -39,17 +40,17 @@ function SensorChart({ sensorName, unit, reading, history }: SensorChartProps) {
   const buffer = span * 0.6;
 
   return (
-    <Card className="rounded-none h-full w-full">
-      {/* <CardHeader className="h-10 px-2 py-2">
+    <Card className="rounded-none flex flex-col h-full w-full">
+      <CardHeader className="flex-none px-2 py-0">
         <CardTitle>
-          <p className="text-md font-bold">
-            {sensorName}
-            {reading ? `${reading.value.toFixed(1)}` : '—'}
-            <span className="text-sm text-muted-foreground ml-1">{unit}</span>
+          <p className="text-sm font-medium">
+            {sensorName}:
+            <span className="ml-4">{reading ? `${reading.value.toFixed(1)}` : '—'}</span>
+            <span className="text-xs text-muted-foreground ml-1">{unit}</span>
           </p>
         </CardTitle>
-      </CardHeader> */}
-      <CardContent className="h-full px-0 py-0">
+      </CardHeader>
+      <CardContent className="flex-1 min-h-0 p-0">
         <ChartContainer className="h-full w-full" config={chartConfig}>
           <LineChart data={history} margin={{ top: 1, right: 1, left: 1, bottom: 1 }}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -65,7 +66,7 @@ function SensorChart({ sensorName, unit, reading, history }: SensorChartProps) {
             <Line
               type="linear"
               dataKey="value"
-              stroke="hsl(var(--chart-1))"
+              stroke={colour}
               dot={false}
               isAnimationActive={false}
             />
