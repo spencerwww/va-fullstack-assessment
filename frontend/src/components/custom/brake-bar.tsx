@@ -19,7 +19,7 @@ function BrakeBar({ pressure }: { pressure: number }) {
           </p>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 flex justify-center items-end p-2">
+      <CardContent className="flex-1 flex justify-center items-end p-3">
         <div className="h-full w-1/3 bg-muted rounded flex flex-col-reverse">
           <div 
             className="rounded w-full transition-all duration-300"

@@ -4,10 +4,10 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { fetchHealth, API_BASE_URL, fetchSensors } from '../lib/api-client';
 import { useTelemetry } from '../hooks/useTelemetry';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import SensorCard from '../components/custom/sensor-card';
 import SensorChart from '../components/custom/sensor-chart';
 import SteeringWheel from '../components/custom/steering-wheel';
+import Speedometer from '../components/custom/speedometer';
 import BrakeBar from '../components/custom/brake-bar';
 import PackSocBar from '../components/custom/pack-soc-bar';
 
@@ -142,7 +142,7 @@ export default function Page() {
               {/* Visual Indicators */}
               <div className="flex flex-row flex-[3] min-h-0">
                 <SteeringWheel angle={latestReadings.get(3000000060102)?.value ?? 0} />
-                <Card className="rounded-none flex flex-col h-full w-1/4"></Card>
+                <Speedometer speed={latestReadings.get(3000000060101)?.value ?? 0}/>
                 <BrakeBar pressure={latestReadings.get(3000000060103)?.value ?? 0} />
                 <PackSocBar packSoc={latestReadings.get(3000000060003)?.value ?? 0} />
               </div>
