@@ -39,17 +39,19 @@ function SensorChart({ sensorName, unit, reading, history }: SensorChartProps) {
   const buffer = span * 0.6;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{sensorName}</CardTitle>
-        <p className="text-2xl font-bold">
-          {reading ? `${reading.value.toFixed(1)}` : '—'}
-          <span className="text-sm text-muted-foreground ml-1">{unit}</span>
-        </p>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <LineChart data={history} margin={{ top: 2, right: 3, left: 2, bottom: 1 }}>
+    <Card className="rounded-none h-full w-full">
+      {/* <CardHeader className="h-10 px-2 py-2">
+        <CardTitle>
+          <p className="text-md font-bold">
+            {sensorName}
+            {reading ? `${reading.value.toFixed(1)}` : '—'}
+            <span className="text-sm text-muted-foreground ml-1">{unit}</span>
+          </p>
+        </CardTitle>
+      </CardHeader> */}
+      <CardContent className="h-full px-0 py-0">
+        <ChartContainer className="h-full w-full" config={chartConfig}>
+          <LineChart data={history} margin={{ top: 1, right: 1, left: 1, bottom: 1 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="timestamp"
@@ -68,8 +70,8 @@ function SensorChart({ sensorName, unit, reading, history }: SensorChartProps) {
               isAnimationActive={false}
             />
             <ChartTooltip content={<ChartTooltipContent />} />
-            <ReferenceArea y1={range.max} y2={range.max + buffer} fill="red" fillOpacity={0.1} />
-            <ReferenceArea y1={range.min - buffer} y2={range.min} fill="red" fillOpacity={0.1} />
+            <ReferenceArea y1={range.max} y2={range.max + buffer} fill="red" fillOpacity={0.2} />
+            <ReferenceArea y1={range.min - buffer} y2={range.min} fill="red" fillOpacity={0.2} />
           </LineChart>
         </ChartContainer>
       </CardContent>

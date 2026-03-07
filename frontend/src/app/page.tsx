@@ -96,8 +96,76 @@ export default function Page() {
               );
             })}
           </aside>
-          <main className="w-full">
-              <SensorChart sensorName="BATTERY_TEMPERATURE" unit="°C" reading={latestReadings.get(1000000070501)} history={history.get(1000000070501) || []} />
+          <main className="flex flex-row w-full">
+            <div className="flex flex-col w-2/3 p-4">
+              <div className="flex flex-col">
+                <div className="h-24"><SensorChart
+                  sensorName="PACK_CURRENT"
+                  unit="A"
+                  reading={latestReadings.get(3000000060001)}
+                  history={history.get(3000000060001) || []} /></div>
+                <div className="h-24"><SensorChart
+                  sensorName="PACK_VOLTAGE"
+                  unit="V"
+                  reading={latestReadings.get(3000000060002)}
+                  history={history.get(3000000060002) || []} /></div>
+              </div>
+              <div className="flex flex-col">
+                <div className="h-32"><SensorChart
+                  sensorName="VEHICLE_SPEED"
+                  unit="km/h"
+                  reading={latestReadings.get(3000000060101)}
+                  history={history.get(3000000060101) || []} /></div>
+                <div className="h-32"><SensorChart
+                  sensorName="STEERING_ANGLE"
+                  unit="deg"
+                  reading={latestReadings.get(3000000060102)}
+                  history={history.get(3000000060102) || []} /></div>
+                <div className="h-32"><SensorChart
+                  sensorName="BRAKE_PRESSURE_FRONT"
+                  unit="bar"
+                  reading={latestReadings.get(3000000060103)}
+                  history={history.get(3000000060103) || []} /></div>
+              </div>
+            </div>
+            {/* Right Column */}
+            <div className="flex flex-col w-1/3 p-4">
+              <div className="h-24"><SensorChart
+                sensorName="TYRE_PRESSURE_FL"
+                unit="kPa"
+                reading={latestReadings.get(2000000051201)}
+                history={history.get(2000000051201) || []} /></div>
+              <div className="h-24"><SensorChart
+                sensorName="TYRE_PRESSURE_FR"
+                unit="kPa"
+                reading={latestReadings.get(2000000051202)}
+                history={history.get(2000000051202) || []} /></div>
+              <div className="h-24"><SensorChart
+                sensorName="TYRE_PRESSURE_RL"
+                unit="kPa"
+                reading={latestReadings.get(2000000051203)}
+                history={history.get(2000000051203) || []} /></div>
+              <div className="h-24"><SensorChart
+                sensorName="TYRE_PRESSURE_RR"
+                unit="kPa"
+                reading={latestReadings.get(2000000051204)}
+                history={history.get(2000000051204) || []} /></div>
+              <div className="h-24"><SensorChart
+                sensorName="MOTOR_TEMPERATURE"
+                unit="°C"
+                reading={latestReadings.get(1000000070502)}
+                history={history.get(1000000070502) || []} /></div>
+              <div className="h-24"><SensorChart
+                sensorName="BATTERY_TEMPERATURE"
+                unit="°C"
+                reading={latestReadings.get(1000000070501)}
+                history={history.get(1000000070501) || []} /></div>
+              <div className="h-24"><SensorChart
+                sensorName="PACK_SOC"
+                unit="%"
+                reading={latestReadings.get(3000000060003)}
+                history={history.get(3000000060003) || []} /></div>   
+            </div>
           </main>
       </div>
     </>
